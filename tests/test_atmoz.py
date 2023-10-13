@@ -7,6 +7,6 @@ def test_connecting(composed_environment):
     sftp_user = "testuser"
     sftp_password = "test"
 
-    files = list_folder_password(host_name="127.0.0.1", user_name="testuser", 
-                                 password="test", port=54168)
+    files = list_folder_password(host_name=sftp_host, user_name=sftp_user, 
+                                 password=sftp_password, port=sftp_port)
     assert files == []
