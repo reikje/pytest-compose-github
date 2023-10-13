@@ -5,4 +5,4 @@ services:
     ports:
       - "22"
     environment:
-      SFTP_USERS: testuser:test:100:100:download
+      SFTP_USERS: testuser:password:100:100:download
