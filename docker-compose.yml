@@ -1,0 +1,8 @@
+version: '3'
+services:
+  sftp:
+    image: atmoz/sftp
+    ports:
+      - "22"
+    environment:
+      SFTP_USERS: testuser:test:100:100:download
