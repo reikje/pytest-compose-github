@@ -23,8 +23,6 @@ jobs:
           with:
             path: .venv
             key: 'pydeps-${{ hashFiles(''**/poetry.lock'') }}'
-        - run: poetry install --no-interaction --no-root
-          if: steps.cache-deps.outputs.cache-hit != 'true'
         - run: poetry install --no-interaction
         - name: Run tests using pytest
           run: poetry run python -m pytest

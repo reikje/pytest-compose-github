@@ -1,3 +1,4 @@
+import logging
 import os
 import socket
 import paramiko
@@ -8,6 +9,9 @@ from botocore.config import Config
 
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 @dataclass_json
 @dataclass
@@ -42,4 +46,13 @@ def composed_environment(docker_ip, docker_services) -> ComposedEnvironment:
     docker_services.wait_until_responsive(
         timeout=10.0, pause=0.5, check=lambda: _is_responsive(host=docker_ip, sftp_port=sftp_port, localstack_port=localstack_port)
     )
+
+    sftp_logs = docker_services.get_logs('sftp')
+    for line in sftp_logs.split('\n'):
+        logger.debug(str(line))
+
+    localstack_logs = docker_services.get_logs('localstack')
+    for line in localstack_logs.split('\n'):
+        logger.debug(str(line))
+
     return ComposedEnvironment(host_name=docker_ip, sftp_port=sftp_port)
