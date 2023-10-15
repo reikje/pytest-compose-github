@@ -1,6 +1,6 @@
 import logging
-import os
-import socket
+import time
+import timeit
 import paramiko
 import pytest
 import boto3
@@ -37,14 +37,47 @@ def _is_responsive(host: str, sftp_port: int, localstack_port: int) -> bool:
     except Exception as e:
         return False
 
+class WaitTimeoutException(Exception):
+    def __init__(self, container_logs, message="Timeout reached while waiting on service!"):
+        self.container_logs = container_logs
+        super().__init__(message)
+
+def custom_wait(self, check, timeout, pause, clock=timeit.default_timer):
+    """Wait until a service is responsive."""
+
+    ref = clock()
+    now = ref
+    while (now - ref) < timeout:
+        if check():
+            return
+        time.sleep(pause)
+        now = clock()
+
+    # get container logs to provide info about failure
+    output = self._docker_compose.execute("logs").decode("utf-8")
+
+    raise WaitTimeoutException(container_logs=output)
+
 
 @pytest.fixture(scope="session")
-def composed_environment(docker_ip, docker_services) -> ComposedEnvironment:
+def monkeysession(request):
+    mp = pytest.MonkeyPatch()
+    request.addfinalizer(mp.undo)
+    return mp
+
+
+@pytest.fixture(scope="session")
+def composed_environment(monkeysession, docker_ip, docker_services) -> ComposedEnvironment:
+    from pytest_docker.plugin import Services
+    monkeysession.setattr(Services, "wait_until_responsive", custom_wait)
     sftp_port = docker_services.port_for("sftp", 22)
     localstack_port = docker_services.port_for("localstack", 4566)
-    #host_name = "host.docker.internal"
-    docker_services.wait_until_responsive(
-        timeout=10.0, pause=0.5, check=lambda: _is_responsive(host=docker_ip, sftp_port=sftp_port, localstack_port=localstack_port)
-    )
+    try:
+        docker_services.wait_until_responsive(
+            timeout=10.0, pause=0.5, check=lambda: _is_responsive(host=docker_ip, sftp_port=7967, localstack_port=localstack_port)
+        )
+    except WaitTimeoutException as ex:
+        logging.error(ex.container_logs)
+        raise ex
 
     return ComposedEnvironment(host_name=docker_ip, sftp_port=sftp_port)
