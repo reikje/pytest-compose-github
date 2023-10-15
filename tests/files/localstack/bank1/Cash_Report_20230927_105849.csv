@@ -1,0 +1,4 @@
+,Account Name,Instr. ISIN,L,Amount,Exch rate,NAV (USD),NAV (Pos.),% of TMV,IBAN,Interest Rate,Op. Status
+1234567,,,,,,123.45,,0.03,,,
+USD,,,,,,123.45,123.45,0.03,,,
+1234567-001-000-123,CUSTOMER CURRENT ACCOUNT,1234567-001-000-123,,123.45,1,123.45,123.45,0.03,,,Accounted

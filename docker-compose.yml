@@ -6,6 +6,9 @@ services:
       - "22"
     environment:
       SFTP_USERS: testuser:password:100:100:download
+    volumes:
+      - '$HOST_PWD/tests/files/keys/authorized_keys:/home/ledgerpigeon/.ssh/authorized_keys'
+      - '$HOST_PWD/tests/files/keys/user_rsa.pub:/home/ledgerpigeon/.ssh/user_rsa.pub'    
 
   localstack:
     image: localstack/localstack:2.0
