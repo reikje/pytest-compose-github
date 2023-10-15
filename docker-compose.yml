@@ -7,8 +7,8 @@ services:
     environment:
       SFTP_USERS: testuser:password:100:100:download
     volumes:
-      - '${{ github.workspace }}/tests/files/keys/user_rsa:/home/ledgerpigeon/.ssh/authorized_keys'
-      - '${{ github.workspace }}/tests/files/keys/user_rsa.pub:/home/ledgerpigeon/.ssh/user_rsa.pub'    
+      - '$GITHUB_WORKSPACE/tests/files/keys/user_rsa:/home/ledgerpigeon/.ssh/authorized_keys'
+      - '$GITHUB_WORKSPACE/tests/files/keys/user_rsa.pub:/home/ledgerpigeon/.ssh/user_rsa.pub'    
 
   localstack:
     image: localstack/localstack:2.0
@@ -20,6 +20,6 @@ services:
     ports:
       - "4566"
     volumes:
-      - '${{ github.workspace }}/tests/files/localstack/localstack-script.sh:/etc/localstack/init/ready.d/script.sh'
-      - '${{ github.workspace }}/tests/files/keys/user_rsa:/tmp/ssh/user_rsa'
-      - '${{ github.workspace }}/tests/files/localstack/bank1:/tmp/bank1'
+      - '$GITHUB_WORKSPACE/tests/files/localstack/localstack-script.sh:/etc/localstack/init/ready.d/script.sh'
+      - '$GITHUB_WORKSPACE/tests/files/keys/user_rsa:/tmp/ssh/user_rsa'
+      - '$GITHUB_WORKSPACE/tests/files/localstack/bank1:/tmp/bank1'
