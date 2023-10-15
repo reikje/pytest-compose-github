@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.10"
 dataclasses-json = "^0.6.1"
 paramiko = "^3.3.1"
+boto3 = "^1.28.63"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.2"

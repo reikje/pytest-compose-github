@@ -6,3 +6,13 @@ services:
       - "22"
     environment:
       SFTP_USERS: testuser:password:100:100:download
+
+  localstack:
+    image: localstack/localstack:2.0
+    environment:
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - REGION=us-east-1
+      - BUCKET_NAME_INCOMING=tb-ledgerpigeon-integration
+    ports:
+      - "4566"
