@@ -47,12 +47,4 @@ def composed_environment(docker_ip, docker_services) -> ComposedEnvironment:
         timeout=10.0, pause=0.5, check=lambda: _is_responsive(host=docker_ip, sftp_port=sftp_port, localstack_port=localstack_port)
     )
 
-    sftp_logs = docker_services.get_logs('sftp')
-    for line in sftp_logs.split('\n'):
-        logger.debug(str(line))
-
-    localstack_logs = docker_services.get_logs('localstack')
-    for line in localstack_logs.split('\n'):
-        logger.debug(str(line))
-
     return ComposedEnvironment(host_name=docker_ip, sftp_port=sftp_port)
